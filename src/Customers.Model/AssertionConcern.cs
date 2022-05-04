@@ -1,5 +1,4 @@
 ﻿using Customers.Model.Exceptions;
-using ArgumentNullException = Customers.Model.Exceptions.ArgumentNullException;
 
 namespace Customers.Model
 {
@@ -8,13 +7,13 @@ namespace Customers.Model
         public static void AssertArgumentNotNullOrEmpty(string parameter, string paramName)
         {
             if (string.IsNullOrEmpty(parameter))
-                throw new ArgumentNullException(paramName);
+                throw new AssertionArgumentNullException(paramName);
         }
 
         public static void AssertArgumentNotNull<T>(T argument, string paramName) where T : class
         {
             if (argument == null)
-                throw new ArgumentNullException(paramName);
+                throw new AssertionArgumentNullException(paramName);
         }
 
         public static void AssertArgumentIsEmail(string email)

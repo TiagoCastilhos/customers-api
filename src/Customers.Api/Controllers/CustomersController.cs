@@ -24,6 +24,7 @@ public class CustomersController : ControllerBase
 
     [HttpGet("{email}")]
     [ProducesResponseType(typeof(CustomerOutputModel), 200, contentType: "application/json")]
+    [ProducesResponseType(typeof(string), 400, contentType: "text/plain")]
     public async Task<IActionResult> GetAsync(string email)
     {
         return Ok(await _customersService.GetAsync(email));
@@ -31,6 +32,7 @@ public class CustomersController : ControllerBase
 
     [HttpPost("")]
     [ProducesResponseType(typeof(CustomerOutputModel), 200, contentType: "application/json")]
+    [ProducesResponseType(typeof(string), 400, contentType: "text/plain")]
     public async Task<IActionResult> PostAsync([FromBody] CustomerInputModel customerInputModel)
     {
         return Ok(await _customersService.InsertAsync(customerInputModel));
@@ -38,6 +40,7 @@ public class CustomersController : ControllerBase
 
     [HttpPut("{email}")]
     [ProducesResponseType(typeof(CustomerOutputModel), 200, contentType: "application/json")]
+    [ProducesResponseType(typeof(string), 400, contentType: "text/plain")]
     public async Task<IActionResult> PutAsync(string email, [FromBody] CustomerInputModel customerInputModel)
     {
         await _customersService.UpdateAsync(customerInputModel);
@@ -46,6 +49,7 @@ public class CustomersController : ControllerBase
 
     [HttpDelete("{email}")]
     [ProducesResponseType(typeof(CustomerOutputModel), 200, contentType: "application/json")]
+    [ProducesResponseType(typeof(string), 400, contentType: "text/plain")]
     public async Task<IActionResult> DeleteAsync(string email)
     {
         await _customersService.DeleteAsync(email);
