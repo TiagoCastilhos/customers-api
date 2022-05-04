@@ -7,12 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Customers.Application.Abstractions\Customers.Application.Abstractions.csproj" />
-    <ProjectReference Include="..\Customers.Data.Abstractions\Customers.Data.Abstractions.csproj" />
+    <ProjectReference Include="..\Customers.Application\Customers.Application.csproj" />
+    <ProjectReference Include="..\Customers.Data\Customers.Data.csproj" />
   </ItemGroup>
 
 </Project>
