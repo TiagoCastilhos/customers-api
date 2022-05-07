@@ -4,6 +4,7 @@ using Customers.Data.Abstractions.Repositories;
 using Customers.Model;
 using Customers.Model.Dtos;
 using Customers.Model.Entities;
+using Customers.Model.Exceptions;
 
 namespace Customers.Application.Services
 {
@@ -25,11 +26,23 @@ namespace Customers.Application.Services
                 .ToList();
 
         public async Task<CustomerOutputModel> GetAsync(string email)
-            => ToOutput(await GetByEmailAsync(email));
+        {
+            var customer = await GetByEmailAsync(email);
+
+            if (customer == null)
+                throw new EntityNotFoundException(email, "Customer");
+
+            return ToOutput(customer);
+        }
 
         public async Task<CustomerOutputModel> InsertAsync(CustomerInputModel customerInputModel)
         {
             AssertionConcern.AssertArgumentNotNull(customerInputModel, nameof(customerInputModel));
+
+            var existingCustomer = await _customersRepository.GetAsync(customerInputModel.Email);
+
+            if (existingCustomer != null)
+                throw new EntityAlreadyExistsException(customerInputModel.Email, "Customer");
 
             var model = ToModel(customerInputModel);
 
@@ -39,11 +52,14 @@ namespace Customers.Application.Services
             return ToOutput(model);
         }
 
-        public async Task UpdateAsync(CustomerInputModel customerInputModel)
+        public async Task UpdateAsync(string email, CustomerInputModel customerInputModel)
         {
             AssertionConcern.AssertArgumentNotNull(customerInputModel, nameof(customerInputModel));
 
-            var customer = await _customersRepository.GetAsync(customerInputModel.Email);
+            var customer = await _customersRepository.GetAsync(email);
+
+            if (customer == null)
+                throw new EntityNotFoundException(email, "Customer");
 
             customer.UpdateEmail(customerInputModel.Email);
             customer.Rename(customerInputModel.Name);
@@ -53,18 +69,27 @@ namespace Customers.Application.Services
 
         public async Task DeleteAsync(string email)
         {
+            ValidateEmailArgument(email);
             var customer = await GetByEmailAsync(email);
 
-            _customersRepository.DeleteAsync(customer);
+            if (customer == null)
+                throw new EntityNotFoundException(email, "Customer");
+
+            _customersRepository.Delete(customer);
             await _customersUnitOfWork.SaveAsync();
         }
 
         private async Task<Customer> GetByEmailAsync(string email)
         {
-            AssertionConcern.AssertArgumentNotNullOrEmpty(email, nameof(email));
-            AssertionConcern.AssertArgumentIsEmail(email);
+            ValidateEmailArgument(email);
 
             return await _customersRepository.GetAsync(email);
+        }
+
+        private static void ValidateEmailArgument(string email)
+        {
+            AssertionConcern.AssertArgumentNotNullOrEmpty(email, nameof(email));
+            AssertionConcern.AssertArgumentIsEmail(email);
         }
 
         private CustomerOutputModel ToOutput(Customer model)

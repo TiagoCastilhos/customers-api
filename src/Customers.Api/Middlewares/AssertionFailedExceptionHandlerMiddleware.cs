@@ -21,10 +21,23 @@ namespace Customers.Api.Middlewares
             }
             catch (AssertionConcernFailedException exception)
             {
-                context.Response.StatusCode = 400;
-                context.Response.ContentType = "text/plain";
-                await context.Response.WriteAsync(exception.Message);
+                await WriteToResponseBodyAsync(context, 400, exception);
             }
+            catch (EntityAlreadyExistsException exception)
+            {
+                await WriteToResponseBodyAsync(context, 409, exception);
+            }
+            catch (EntityNotFoundException exception)
+            {
+                await WriteToResponseBodyAsync(context, 404, exception);
+            }
+        }
+
+        private static async Task WriteToResponseBodyAsync(HttpContext context, int responseCode, Exception exception)
+        {
+            context.Response.StatusCode = responseCode;
+            context.Response.ContentType = "text/plain";
+            await context.Response.WriteAsync(exception.Message);
         }
     }
 

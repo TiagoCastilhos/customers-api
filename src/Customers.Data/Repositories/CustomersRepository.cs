@@ -34,7 +34,7 @@ namespace Customers.Data.Repositories
             await _customersDbContext.Customers.AddAsync(customer);
         }
 
-        public void DeleteAsync(Customer customer)
+        public void Delete(Customer customer)
         {
             AssertionConcern.AssertArgumentNotNull(customer, nameof(customer));
 

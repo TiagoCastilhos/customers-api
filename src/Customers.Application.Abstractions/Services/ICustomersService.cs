@@ -7,7 +7,7 @@ namespace Customers.Application.Abstractions.Services
         IEnumerable<CustomerOutputModel> GetAll();
         Task<CustomerOutputModel> GetAsync(string email);
         Task<CustomerOutputModel> InsertAsync(CustomerInputModel customerInputModel);
-        Task UpdateAsync(CustomerInputModel customerInputModel);
+        Task UpdateAsync(string email, CustomerInputModel customerInputModel);
         Task DeleteAsync(string email);
     }
 }

@@ -7,6 +7,6 @@ namespace Customers.Data.Abstractions.Repositories
         Task<Customer> GetAsync(string email);
         IEnumerable<Customer> GetAll();
         Task InsertAsync(Customer customer);
-        void DeleteAsync(Customer customer);
+        void Delete(Customer customer);
     }
 }
