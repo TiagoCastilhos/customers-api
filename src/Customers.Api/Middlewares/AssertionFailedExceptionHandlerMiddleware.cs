@@ -1,6 +1,4 @@
 ﻿using Customers.Model.Exceptions;
-using Microsoft.AspNetCore.Diagnostics;
-using System.Text;
 
 namespace Customers.Api.Middlewares
 {
